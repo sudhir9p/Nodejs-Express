@@ -14,7 +14,7 @@ export class SourcesRoutes {
                 console.log(`Request type: ${req.method}`)
                 next();
             }, this.sourcesController.getSourcesData)
-            .post((req, res,next) => {
+            .post((req, res, next) => {
                 //middle ware
                 console.log(`Request from: ${req.originalUrl}`)
                 console.log(`Request type: ${req.method}`)
@@ -24,16 +24,22 @@ export class SourcesRoutes {
         this.app.route('/news/:sourceId')
             .get((req, res, next) => {
                 //middle ware
-                console.log(`Request from: ${req.originalUrl}`)
+                console.log(`Request to detaills by ID from: ${req.originalUrl}`)
                 console.log(`Request type: ${req.method}`)
                 next();
             }, this.sourcesController.getSourcesData)
-            .put((req, res) => {
-
-            })
-            .delete((req, res) => {
-
-            });
+            .put((req, res, next) => {
+                //middle ware
+                console.log(`Request to detaills by ID from: ${req.originalUrl}`)
+                console.log(`Request type: ${req.method}`)
+                next();
+            }, this.sourcesController.updateSources)
+            .delete((req, res, next) => {
+                //middle ware
+                console.log(`Request to detaills by ID from: ${req.originalUrl}`)
+                console.log(`Request type: ${req.method}`)
+                next();
+            }, this.sourcesController.deleteSources);
 
     }
 }
