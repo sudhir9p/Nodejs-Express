@@ -11,18 +11,18 @@ export class SourcesController {
     }
 
     addSources = (req, res) => {
-        this.sourcesModel.addSources(req.body);
-        res.send("Source Added SuccessFully");
+        const response = this.sourcesModel.addSources(req.body);
+        res.send(response);
     }
 
     updateSources = (req, res) => {
-        this.sourcesModel.updateSources(req.body, req.params.sourceId);
-        res.send("Source Updated SuccessFully");
+        const response = this.sourcesModel.updateSources(req.body, req.params.sourceId);
+        res.send(response);
     }
 
     deleteSources = (req, res) => {
-        this.sourcesModel.deleteSources(req.params.sourceId);
-        res.send("Source Deleted Successfully");
+        const response = this.sourcesModel.deleteSources(req.params.sourceId);
+        res.send(response);
     }
 
 
