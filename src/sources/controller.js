@@ -11,6 +11,7 @@ export class SourcesController {
     }
 
     addSources = (req, res) => {
+        this.sourcesModel.addSources(req.body);
         res.send("Updated SuccessFully");
     }
 

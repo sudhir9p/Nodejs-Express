@@ -14,7 +14,7 @@ export class SourcesRoutes {
                 console.log(`Request type: ${req.method}`)
                 next();
             }, this.sourcesController.getSourcesData)
-            .post((req, res) => {
+            .post((req, res,next) => {
                 //middle ware
                 console.log(`Request from: ${req.originalUrl}`)
                 console.log(`Request type: ${req.method}`)

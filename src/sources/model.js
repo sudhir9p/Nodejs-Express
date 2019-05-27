@@ -5,7 +5,7 @@ export class SourcesModel {
         this.sources = sources;
     }
 
-    getSources() {
+    getSources(id) {
         if (id) {
             return this.sources.filter((source) => {
                 return source.id == id
@@ -14,5 +14,9 @@ export class SourcesModel {
         else {
             return this.sources;
         }
+    }
+
+    addSources(body) {
+        this.sources.push(body);
     }
 }
