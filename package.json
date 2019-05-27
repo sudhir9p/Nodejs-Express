@@ -1,0 +1,48 @@
+{
+  "name": "restapi-express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/server.js",
+    "build":"node_modules/.bin/webpack --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudhir9p/Nodejs-Express.git"
+  },
+  "keywords": [
+    "node.js"
+  ],
+  "author": "Sudhir",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sudhir9p/Nodejs-Express/issues"
+  },
+  "homepage": "https://github.com/sudhir9p/Nodejs-Express#readme",
+  "dependencies": {
+    "@babel/core": "7.4.3",
+    "@babel/plugin-proposal-class-properties": "7.4.0",
+    "@babel/plugin-syntax-dynamic-import": "7.2.0",
+    "@babel/polyfill": "7.4.3",
+    "@babel/preset-env": "7.4.3",
+    "babel-loader": "8.0.5",
+    "babel-plugin-transform-runtime": "6.23.0",
+    "css-loader": "2.1.1",
+    "es6-promise": "4.2.6",
+    "eslint": "5.16.0",
+    "express": "^4.17.1",
+    "html-webpack-plugin": "3.2.0",
+    "isomorphic-fetch": "2.2.1",
+    "sass-loader": "7.1.0",
+    "style-loader": "0.23.1",
+    "uglifyjs-webpack-plugin": "2.1.2",
+    "webpack-dev-server": "3.3.1"
+  },
+  "devDependencies": {
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1",
+    "webpack-node-externals": "^1.7.2"
+  }
+}
