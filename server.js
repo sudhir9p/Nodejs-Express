@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.get('/', (req, res) => {
-    res.send('HELLO WORLD');
+    res.send('Nodejs-Express HomeTask');
 })
 
 app.listen(port, () => {
