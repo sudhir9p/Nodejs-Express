@@ -1,6 +1,6 @@
-import { sources } from '../../data/sources-data.json'
+import { sources } from '../data/sources-data.json'
 
-export class SourcesModel {
+export class NewsSourcesModel {
     constructor() {
         this.sources = sources;
     }
@@ -37,14 +37,15 @@ export class SourcesModel {
     }
 
     deleteSources(sourceId) {
+        let responseText = "Cannot Delete with given source Id";
         this.sources.forEach((source, index) => {
             if (source.id == sourceId) {
                 this.sources.splice(index, 1);
-                return "Source Deleted Successfully";
-            }
-            else {
-                return "Cannot find source with given Id";
+                responseText = "Source Deleted Successfully";
+                return;
             }
         });
+
+        return responseText;
     }
 }

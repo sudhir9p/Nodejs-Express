@@ -1,4 +1,4 @@
-import { SourcesRoutes } from './src/sources/routes.js';
+import { NewsSourcesRoutes } from './src/routes/news-sources.routes';
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -19,7 +19,7 @@ app.listen(port, () => {
     console.log('Press Ctrl+C to quit.')
 });
 
-const routes = new SourcesRoutes(app);
+const routes = new NewsSourcesRoutes(app);
 routes.getRoutes();
 
 

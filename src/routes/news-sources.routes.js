@@ -1,9 +1,9 @@
-import { SourcesController } from './controller.js';
+import { NewsSourcesService } from '../services/news-sources.service';
 
-export class SourcesRoutes {
+export class NewsSourcesRoutes {
     constructor(app) {
         this.app = app;
-        this.sourcesController = new SourcesController();
+        this.sourcesService = new NewsSourcesService();
     }
 
     getRoutes() {
@@ -13,13 +13,13 @@ export class SourcesRoutes {
                 console.log(`Request from: ${req.originalUrl}`)
                 console.log(`Request type: ${req.method}`)
                 next();
-            }, this.sourcesController.getSourcesData)
+            }, this.sourcesService.getSourcesData)
             .post((req, res, next) => {
                 //middle ware
                 console.log(`Request from: ${req.originalUrl}`)
                 console.log(`Request type: ${req.method}`)
                 next();
-            }, this.sourcesController.addSources);
+            }, this.sourcesService.addSources);
 
         this.app.route('/news/:sourceId')
             .get((req, res, next) => {
@@ -27,19 +27,19 @@ export class SourcesRoutes {
                 console.log(`Request to detaills by ID from: ${req.originalUrl}`)
                 console.log(`Request type: ${req.method}`)
                 next();
-            }, this.sourcesController.getSourcesData)
+            }, this.sourcesService.getSourcesData)
             .put((req, res, next) => {
                 //middle ware
                 console.log(`Request to detaills by ID from: ${req.originalUrl}`)
                 console.log(`Request type: ${req.method}`)
                 next();
-            }, this.sourcesController.updateSources)
+            }, this.sourcesService.updateSources)
             .delete((req, res, next) => {
                 //middle ware
                 console.log(`Request to detaills by ID from: ${req.originalUrl}`)
                 console.log(`Request type: ${req.method}`)
                 next();
-            }, this.sourcesController.deleteSources);
+            }, this.sourcesService.deleteSources);
 
     }
 }

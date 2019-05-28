@@ -1,9 +1,9 @@
-import { SourcesModel } from './model.js';
+import { NewsSourcesModel } from '../models/news-sources.model';
 
 
-export class SourcesController {
+export class NewsSourcesService {
     constructor() {
-        this.sourcesModel = new SourcesModel();
+        this.sourcesModel = new NewsSourcesModel();
     }
 
     getSourcesData = (req, res) => {
