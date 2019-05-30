@@ -6,8 +6,8 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
-app.use(bodyParser.json()); 
-app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.get('/', (req, res) => {
@@ -21,5 +21,13 @@ app.listen(port, () => {
 
 const routes = new NewsSourcesRoutes(app);
 routes.getRoutes();
+
+
+//error handler
+app.use((err, req, res, next) => {
+    console.log(err);
+    res.send('Error occured while fetching data');
+    res.status(500);
+});
 
 
