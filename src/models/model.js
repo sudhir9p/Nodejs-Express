@@ -5,19 +5,19 @@ export class NewsArticlesModel {
         this.articles = articles;
     }
 
-    getarticles() {
+    get() {
         return this.articles;
     }
 
-    addarticles(article) {
+    add(article) {
         this.articles.push(article);
     }
 
-    updatearticles(articleIndex, article) {
+    update(articleIndex, article) {
         this.articles[articleIndex] = article;
     }
 
-    deletearticles(articleIndex) {
+    delete(articleIndex) {
         this.articles.splice(articleIndex, 1);
     }
 }

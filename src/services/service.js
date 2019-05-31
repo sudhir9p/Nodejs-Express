@@ -6,13 +6,13 @@ export class NewsArticlesService {
         this.articlesModel = new NewsArticlesModel();
     }
 
-    get = (articleId) => {
+    getarticles = (articleId) => {
         return new Promise((resolve, reject) => {
-            resolve(this.articlesModel.getarticles(articleId));
+            resolve(this.articlesModel.get(articleId));
         });
     }
 
-    getById = (articleId) => {
+    getarticlesById = (articleId) => {
         return new Promise((resolve, reject) => {
             const article = this.articlesModel.articles.find((article) => {
                 if (article.id == articleId)
@@ -25,10 +25,10 @@ export class NewsArticlesService {
         });
     }
 
-    add = (article) => {
+    addarticles = (article) => {
         return new Promise((resolve, reject) => {
             if (article && article.id && article.name && article.url) {
-                this.articlesModel.addarticles(article);
+                this.articlesModel.add(article);
                 resolve("Article Added SuccessFully");
             }
             else {
@@ -37,12 +37,12 @@ export class NewsArticlesService {
         });
     }
 
-    update = (articleId, article) => {
+    updatearticles = (articleId, article) => {
         return new Promise((resolve, reject) => {
             if (article && article.id == articleId) {
                 const articleIndex = this.findArticleIndex();
                 if (articleIndex) {
-                    this.articlesModel.updatearticles(articleIndex, article);
+                    this.articlesModel.update(articleIndex, article);
                     resolve("Article Updated SuccessFully")
                 }
                 else {
@@ -55,11 +55,11 @@ export class NewsArticlesService {
         });
     }
 
-    delete = (articleId) => {
+    deletearticles = (articleId) => {
         return new Promise((resolve, reject) => {
             const articleIndex = this.findArticleIndex();
             if (articleIndex) {
-                this.articlesModel.deletearticles(articleId);
+                this.articlesModel.delete(articleId);
                 resolve("Article deleted successfully");
             }
             else {
