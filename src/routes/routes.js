@@ -12,45 +12,44 @@ export class NewsArticlesRoutes {
             res.send('Nodejs-Express HomeTask');
         });
 
-        this.app.route('/news')
-            .get((req, res, next) => {
+        this.app.get('/news',
+            (req, res) => {
                 this.articlesService.get(req.params.articleId).then((result) => {
                     res.send(result);
                 }).catch((err) => {
                     res.send(err);
                 });
-            })
-            .post((req, res, next) => {
-                this.articlesService.add(req.params.body).then((result) => {
-                    res.send(result);
-                }).catch((err) => {
-                    res.send(err);
-                });
             });
-
-        this.app.route('/news/:articleId')
-            .get((req, res, next) => {
-                this.articlesService.getById(req.params.articleId).then((result) => {
-                    res.send(result);
-                }).catch((err) => {
-                    res.send(err);
-                });
-            })
-            .put((req, res, next) => {
-                this.articlesService.update(req.params.articleId, req.params.body).then((result) => {
-                    res.send(result);
-                }).catch((err) => {
-                    res.send(err);
-                });
-            })
-            .delete((req, res, next) => {
-
-                this.articlesService.delete(req.params.articleId).then((result) => {
-                    res.send(result);
-                }).catch((err) => {
-                    res.send(err);
-                });
+        this.app.post('/news', (req, res) => {
+            this.articlesService.add(req.body).then((result) => {
+                res.send(result);
+            }).catch((err) => {
+                res.send(err);
             });
+        });
+
+        this.app.get('/news/:articleId', (req, res) => {
+            this.articlesService.getById(req.params.articleId).then((result) => {
+                res.send(result);
+            }).catch((err) => {
+                res.send(err);
+            });
+        });
+        this.app.put('/news/:articleId', (req, res) => {
+            this.articlesService.update(req.params.articleId, req.body).then((result) => {
+                res.send(result);
+            }).catch((err) => {
+                res.send(err);
+            });
+        });
+        this.app.delete('/news/:articleId', (req, res) => {
+
+            this.articlesService.delete(req.params.articleId).then((result) => {
+                res.send(result);
+            }).catch((err) => {
+                res.send(err);
+            });
+        });
 
     }
 }

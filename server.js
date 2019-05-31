@@ -6,6 +6,7 @@ const express = require('express'),
     path = require('path'),
     fs = require('fs'),
     app = express(),
+    router = express.Router(),
     port = 3000,
     logfile = fs.createWriteStream(path.join(__dirname, "/apilog.txt"));
 
@@ -19,10 +20,11 @@ app.listen(port, () => {
     console.log('Press Ctrl+C to quit.')
 });
 
-const routes = new NewsArticlesRoutes(app);
+const routes = new NewsArticlesRoutes(router);
 routes.getRoutes();
+app.use(morgan('common', { stream: logfile }));
+app.use('/', router);
 
-app.use(morgan('common', {stream: logfile}));
 
 //error handler
 app.use((err, req, res, next) => {
