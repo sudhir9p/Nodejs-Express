@@ -9,6 +9,14 @@ export class NewsArticlesModel {
         return this.articles;
     }
 
+    getById(articleId) {
+        const article = this.articles.find((article) => {
+            if (article.id == articleId)
+                return article;
+        });
+        return article;
+    }
+
     add(article) {
         this.articles.push(article);
     }
@@ -19,5 +27,13 @@ export class NewsArticlesModel {
 
     delete(articleIndex) {
         this.articles.splice(articleIndex, 1);
+    }
+
+    getArticleIndex(articleId) {
+        const articleIndex = this.articles.findIndex((article, index) => {
+            if (article.id == articleId)
+                return index;
+        });
+        return articleIndex;
     }
 }
