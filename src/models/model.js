@@ -31,8 +31,9 @@ export class NewsArticlesModel {
 
     getArticleIndex(articleId) {
         const articleIndex = this.articles.findIndex((article, index) => {
-            if (article.id == articleId)
+            if (article.id == articleId) {
                 return index;
+            }
         });
         return articleIndex;
     }

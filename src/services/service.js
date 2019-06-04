@@ -19,10 +19,16 @@ export class NewsArticlesService {
     }
 
     addarticle = (article) => {
-        const validation = this.validateArticle();
+        const validation = this.validateArticle(article);
         if (validation == "") {
-            this.articlesModel.add(article);
-            return ("Article Added SuccessFully");
+            const articleId = this.articlesModel.getArticleIndex(article.id);
+            if (articleId === -1) {
+                return `Article Id ${article.id} already exists`;
+            }
+            else {
+                this.articlesModel.add(article);
+                return "Article Added SuccessFully";
+            }
         }
         else {
             return `Cannot add article , ${validation}`;
@@ -31,19 +37,29 @@ export class NewsArticlesService {
 
     updatearticle = (articleId, article) => {
         if (article && article.id == articleId) {
-            const validation = this.validateArticle();
-            if (validation == "") {
-                const articleIndex = this.articlesModel.getArticleIndex(articleId);
-                if (articleIndex) {
-                    this.articlesModel.update(articleIndex, article);
-                    return "Article Updated SuccessFully";
-                }
-                else {
-                    return "Cannot find article with given id.";
-                }
+            const currentArticle = this.articlesModel.getById(articleId);
+            const articleIndex = this.articlesModel.getArticleIndex(articleId);
+            if (currentArticle) {
+                if (article.title)
+                    currentArticle.title = article.title;
+                if (article.author)
+                    currentArticle.author = article.author;
+                if (article.url)
+                    currentArticle.url = article.url;
+                if (article.content)
+                    currentArticle.content = article.content;
+                if (article.urlToImage)
+                    currentArticle.urlToImage = article.urlToImage;
+                if (article.description)
+                    currentArticle.description = article.description;
+
+                this.articlesModel.update(articleIndex, currentArticle);
+                return "Article Updated SuccessFully";
             }
-            else
-                return validation;
+            else {
+                return "Cannot find article with given id.";
+            }
+
         }
         else {
             return "The Id passed and article id in body should match.";
@@ -53,7 +69,7 @@ export class NewsArticlesService {
     deletearticles = (articleId) => {
         const articleIndex = this.articlesModel.getArticleIndex(articleId);
         if (articleIndex) {
-            this.articlesModel.delete(articleId);
+            this.articlesModel.delete(articleIndex);
             return "Article deleted successfully";
         }
         else {
