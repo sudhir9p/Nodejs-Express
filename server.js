@@ -24,7 +24,7 @@ app.use('/', router);
 //error handler
 app.use((err, req, res, next) => {
     console.log(err);
-    res.status(500).send('Error occured while fetching data');
+    res.status(500).send('Error occured while fetching data ' + err);
 });
 
 

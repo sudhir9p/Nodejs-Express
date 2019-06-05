@@ -6,28 +6,30 @@ export class NewsArticlesService {
         this.articlesModel = new NewsArticlesModel();
     }
 
-    getarticles = (articleId) => {
-        return this.articlesModel.get(articleId);
+    getarticles = async () => {
+        let result = await this.articlesModel.article.find({});
+        return result;
     }
 
-    getarticlesById = (articleId) => {
-        const article = this.articlesModel.getById(articleId);
+    getarticlesById = async (articleId) => {
+        let article = await this.articlesModel.article.find({ 'articleId': articleId });
         if (article)
             return article;
         else
             return "Cannot find article with given id";
     }
 
-    addarticle = (article) => {
+    addarticle = async (article) => {
         const validation = this.validateArticle(article);
         if (validation == "") {
-            const articleId = this.articlesModel.getArticleIndex(article.id);
-            if (articleId === -1) {
-                return `Article Id ${article.id} already exists`;
+            const existingArticle = await this.checkArticleExists(article.articleId);
+            if (existingArticle && existingArticle.length > 0) {
+                return `Article Id ${article.articleId} already exists`;
             }
             else {
-                this.articlesModel.add(article);
-                return "Article Added SuccessFully";
+                const articleModel = new this.articlesModel.article(article);
+                const res = await articleModel.save();
+                return res;
             }
         }
         else {
@@ -35,26 +37,26 @@ export class NewsArticlesService {
         }
     }
 
-    updatearticle = (articleId, article) => {
-        if (article && article.id == articleId) {
-            const currentArticle = this.articlesModel.getById(articleId);
-            const articleIndex = this.articlesModel.getArticleIndex(articleId);
+    updatearticle = async (articleId, article) => {
+        if (article && article.articleId == articleId) {
+            const currentArticle = await this.articlesModel.article.find({ articleId: articleId });
+            const newArticle = {};
             if (currentArticle) {
                 if (article.title)
-                    currentArticle.title = article.title;
+                    newArticle.title = article.title;
                 if (article.author)
-                    currentArticle.author = article.author;
+                    newArticle.author = article.author;
                 if (article.url)
-                    currentArticle.url = article.url;
+                    newArticle.url = article.url;
                 if (article.content)
-                    currentArticle.content = article.content;
+                    newArticle.content = article.content;
                 if (article.urlToImage)
-                    currentArticle.urlToImage = article.urlToImage;
+                    newArticle.urlToImage = article.urlToImage;
                 if (article.description)
-                    currentArticle.description = article.description;
+                    newArticle.description = article.description;
 
-                this.articlesModel.update(articleIndex, currentArticle);
-                return "Article Updated SuccessFully";
+                const res = await this.articlesModel.article.findOneAndUpdate({ articleId: articleId }, { $set: newArticle }, { new: true });
+                return res;
             }
             else {
                 return "Cannot find article with given id.";
@@ -66,20 +68,19 @@ export class NewsArticlesService {
         }
     }
 
-    deletearticles = (articleId) => {
-        const articleIndex = this.articlesModel.getArticleIndex(articleId);
-        if (articleIndex) {
-            this.articlesModel.delete(articleIndex);
+    deletearticles = async (articleId) => {
+
+        let res = await this.articlesModel.article.deleteOne({ articleId: articleId });
+        if (res.deletedCount > 0)
             return "Article deleted successfully";
-        }
-        else {
-            return "Cannot find article with given id.";
-        }
+        else
+            return "Cannot delete article";
+
     }
 
     validateArticle(article) {
         let message = "";
-        if (!article.id)
+        if (!article.articleId)
             message = "Article Id is required";
         if (!article.author)
             message = "Article author is required";
@@ -91,6 +92,11 @@ export class NewsArticlesService {
             message = "Article content is required";
         else
             return message;
+    }
+
+    async checkArticleExists(articleId) {
+        const article = await this.articlesModel.article.find({ articleId: articleId });
+        return article;
     }
 
 }

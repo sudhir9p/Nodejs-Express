@@ -12,26 +12,27 @@ export class NewsArticlesRoutes {
             res.send('Nodejs-Express HomeTask');
         });
 
-        this.app.get('/news',
-            (req, res) => {
-                const result = this.articlesService.getarticles(req.params.articleId);
-                res.send(result);
-            });
-        this.app.post('/news', (req, res) => {
-            const result = this.articlesService.addarticle(req.body);
+        this.app.get('/news', async (req, res) => {
+            const result = await this.articlesService.getarticles();
             res.send(result);
         });
 
-        this.app.get('/news/:articleId', (req, res) => {
-            const result = this.articlesService.getarticlesById(req.params.articleId);
+        this.app.post('/news', async (req, res) => {
+            const result = await this.articlesService.addarticle(req.body);
             res.send(result);
         });
-        this.app.put('/news/:articleId', (req, res) => {
-            const result = this.articlesService.updatearticle(req.params.articleId, req.body);
+
+        this.app.get('/news/:articleId', async (req, res) => {
+            const result = await this.articlesService.getarticlesById(req.params.articleId);
             res.send(result);
         });
-        this.app.delete('/news/:articleId', (req, res) => {
-            const result = this.articlesService.deletearticles(req.params.articleId);
+
+        this.app.put('/news/:articleId', async (req, res) => {
+            const result = await this.articlesService.updatearticle(req.params.articleId, req.body);
+            res.send(result);
+        });
+        this.app.delete('/news/:articleId', async (req, res) => {
+            const result = await this.articlesService.deletearticles(req.params.articleId);
             res.send(result);
         });
 
