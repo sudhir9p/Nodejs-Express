@@ -19,19 +19,19 @@ export class NewsArticlesService {
     }
 
     addarticle = (article) => {
-        const validation = this.validateArticle(article);
-        if (validation == "") {
+        const validationMessage = this.validateArticle(article);
+        if (validationMessage) {
+            throw validationMessage;
+        }
+        else {
             const articleId = this.articlesModel.getArticleIndex(article.id);
             if (articleId === -1) {
-                return `Article Id ${article.id} already exists`;
-            }
-            else {
                 this.articlesModel.add(article);
                 return "Article Added SuccessFully";
             }
-        }
-        else {
-            return `Cannot add article , ${validation}`;
+            else {
+                return `Article Id ${article.id} already exists`;
+            }
         }
     }
 
