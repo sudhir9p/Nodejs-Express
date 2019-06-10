@@ -48,7 +48,10 @@ export class NewsArticlesRoutes {
             passport.authenticate('facebook', { scope: ['email', 'public_profile', 'user_location'] }),
             (req, res) => {
                 if (req.user) {
-                    const authToken = this.JWTTokenService.createToken(req.user);
+
+                    const authToken = this.tokenService.createToken(req.user);
+                    console.log('TOKENNNNNNNNN  ' + authToken);
+
                 }
                 res.send(req.user);
             }

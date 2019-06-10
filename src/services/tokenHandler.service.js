@@ -1,4 +1,4 @@
-import { jwt } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { jwtkey } from '../../config/config.json';
 import { expressJwt } from 'express-jwt';
 import { UsersModel } from '../models/user.model';
