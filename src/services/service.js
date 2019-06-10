@@ -7,12 +7,12 @@ export class NewsArticlesService {
     }
 
     getarticles = async () => {
-        let result = await this.articlesModel.article.find({});
+        let result = await this.articlesModel.get();
         return result;
     }
 
     getarticlesById = async (articleId) => {
-        let article = await this.articlesModel.article.find({ 'articleId': articleId });
+        let article = await this.articlesModel.getById(articleId);
         if (article)
             return article;
         else
@@ -22,14 +22,12 @@ export class NewsArticlesService {
     addarticle = async (article) => {
         const validation = this.validateArticle(article);
         if (validation == "") {
-            const existingArticle = await this.checkArticleExists(article.articleId);
+            const existingArticle = await this.articlesModel.getById(article.articleId);
             if (existingArticle && existingArticle.length > 0) {
                 return `Article Id ${article.articleId} already exists`;
             }
             else {
-                const articleModel = new this.articlesModel.article(article);
-                const res = await articleModel.save();
-                return res;
+                return await this.articlesModel.add(article);
             }
         }
         else {
@@ -39,7 +37,7 @@ export class NewsArticlesService {
 
     updatearticle = async (articleId, article) => {
         if (article && article.articleId == articleId) {
-            const currentArticle = await this.articlesModel.article.find({ articleId: articleId });
+            const currentArticle = await this.articlesModel.getById(articleId);
             const newArticle = {};
             if (currentArticle) {
                 if (article.title)
@@ -55,7 +53,7 @@ export class NewsArticlesService {
                 if (article.description)
                     newArticle.description = article.description;
 
-                const res = await this.articlesModel.article.findOneAndUpdate({ articleId: articleId }, { $set: newArticle }, { new: true });
+                const res = await this.articlesModel.update(articleId, article);
                 return res;
             }
             else {
@@ -70,7 +68,7 @@ export class NewsArticlesService {
 
     deletearticles = async (articleId) => {
 
-        let res = await this.articlesModel.article.deleteOne({ articleId: articleId });
+        let res = await this.articlesModel.delete(articleId);
         if (res.deletedCount > 0)
             return "Article deleted successfully";
         else
@@ -93,10 +91,4 @@ export class NewsArticlesService {
         else
             return message;
     }
-
-    async checkArticleExists(articleId) {
-        const article = await this.articlesModel.article.find({ articleId: articleId });
-        return article;
-    }
-
 }

@@ -9,6 +9,30 @@ export class NewsArticlesModel {
         this.article = new model('Article', articleSchema, 'Articles')
     }
 
+
+    async get() {
+        return await this.article.find({});
+    }
+
+    async getById(articleId) {
+        return await this.article.find({ 'articleId': articleId });
+    }
+
+    async add(article) {
+        const articleModel = new this.article(article);
+        const res = await articleModel.save();
+        return res;
+    }
+
+    async update(articleId, newArticle) {
+        return await this.article.findOneAndUpdate({ articleId: articleId }, { $set: newArticle }, { new: true });
+    }
+
+    async delete(articleId) {
+        return await this.article.deleteOne({ articleId: articleId });
+    }
+
+
     createArticleSchema() {
         const articleSchema = new Schema({
             articleId: {
