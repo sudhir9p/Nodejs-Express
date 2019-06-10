@@ -20,8 +20,11 @@ export class NewsArticlesService {
     }
 
     addarticle = async (article) => {
-        const validation = this.validateArticle(article);
-        if (validation == "") {
+        const validationMessage = this.validateArticle(article);
+        if (validationMessage) {
+            throw `Cannot add article , ${validation}`;
+        }
+        else {
             const existingArticle = await this.articlesModel.getById(article.articleId);
             if (existingArticle && existingArticle.length > 0) {
                 return `Article Id ${article.articleId} already exists`;
@@ -29,9 +32,6 @@ export class NewsArticlesService {
             else {
                 return await this.articlesModel.add(article);
             }
-        }
-        else {
-            return `Cannot add article , ${validation}`;
         }
     }
 
