@@ -1,24 +1,25 @@
 import { NewsArticlesRoutes } from './src/routes/routes';
+import { PassportService } from './src/services/passport.service';
 
 const express = require('express'),
     bodyParser = require('body-parser'),
     morgan = require("morgan"),
     path = require('path'),
     fs = require('fs'),
+    passport = require('passport'),
     app = express(),
     router = express.Router(),
     port = 3000,
-    logfile = fs.createWriteStream(path.join(__dirname, "/apilog.txt"));
+    logfile = fs.createWriteStream(path.join(__dirname, "/apilog.txt")),
+    mongoose = require('mongoose');
+
+app.use(passport.initialize());
+app.use(passport.session());
+const passportservice = new PassportService(passport);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
-app.listen(port, () => {
-    console.log(`App listening to ${port}....`)
-    console.log('Press Ctrl+C to quit.')
-});
 
 const routes = new NewsArticlesRoutes(router);
 routes.getRoutes();
@@ -29,7 +30,20 @@ app.use('/', router);
 //error handler
 app.use((err, req, res, next) => {
     console.log(err);
-    res.status(500).send('Error occured while fetching data');
+    res.status(500).send('Error occured while fetching data ' + err);
 });
+
+
+//Mongo Connection 
+mongoose.connect('mongodb://localhost:27017/articledb', { useNewUrlParser: true })
+const db = mongoose.connection
+db.on('error', console.error.bind(console, 'connection error:'))
+db.once('open', function () {
+    console.log('Connected to MongoDB')
+
+    app.listen(port, function () {
+        console.log('API Server Listening on port ' + port + '!')
+    });
+})
 
 
