@@ -5,15 +5,6 @@ import FacebookStrategy from 'passport-facebook';
 
 export class PassportService {
     constructor(passport) {
-        //     passport.use(new FacebookTokenStrategy({
-        //         clientID: clientID,
-        //         clientSecret: clientSecret
-        //     },
-        //         function (accessToken, refreshToken, profile, done) {
-        //             UsersModel.createFbUser(accessToken, refreshToken, profile, function (err, user) {
-        //                 return done(err, user);
-        //             });
-        //         }));
         passport.serializeUser((user, done) => {
             done(null, user);
         });

@@ -9,6 +9,7 @@ export class UsersModel {
 
     createUserSchema() {
         const usersSchema = new Schema({
+            id: String,
             email: {
                 type: String, required: true,
                 trim: true, unique: true,
@@ -24,16 +25,26 @@ export class UsersModel {
         return usersSchema;
     }
 
-    add(token, displayname, email) {
-        const user = { email: email, fbjwttoken: token, username: displayname }
-    }
-
     get() {
 
     }
 
-    getByEmailId() {
+    async getById(userId) {
+        return await this.user.find({ 'id': userId }, { fbjwttoken: 1 });
+    }
 
+    async add(user) {
+        const userModel = new this.user(user);
+        const res = await userModel.save();
+        return res;
+    }
+
+    async update(currentUser) {
+        return await this.user.findOneAndUpdate({ id: currentUser.id }, { $set: currentUser }, { new: true });
+    }
+
+    async getByUserEmail(email) {
+        return await this.user.find({ 'email': email }, { fbjwttoken: 1 });
     }
 
 }

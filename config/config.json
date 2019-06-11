@@ -3,5 +3,5 @@
     "clientSecret": "5000d7e5d611b9937172f1144ce7ee32",
     "jwtkey": "front-camp",
     "callbackUrl": "http://localhost:3000/auth/facebook/callback",
-    "tokenRefreshTime": "1m"
+    "tokenExpiration": 60
 }
