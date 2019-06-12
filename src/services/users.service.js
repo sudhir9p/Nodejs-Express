@@ -8,17 +8,21 @@ export class UsersService {
 
     async checkUserExists(userId) {
         const currentUser = await this.userModel.getById(userId);
-        return currentUser;
+        if (currentUser && currentUser[0]) {
+            return currentUser[0].toObject();
+        }
+        else
+            return null;
     }
 
     async updateUserToken(token, user) {
-        user.token = token;
+        user.fbjwttoken = token;
         const result = await this.userModel.update(user);
         return result;
     }
 
     async createUser(user, token) {
-        const currentUser = { id: user.id, email: user.emails[0].value, userName: user.displayName, fbjwttoken: token };
+        const currentUser = { "id": user.id, "email": user.emails[0].value, "fbjwttoken": token, "username": user.displayName, };
         const result = await this.userModel.add(currentUser);
         return result;
     }

@@ -10,16 +10,9 @@ export class UsersModel {
     createUserSchema() {
         const usersSchema = new Schema({
             id: String,
-            email: {
-                type: String, required: true,
-                trim: true, unique: true,
-                match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-            },
-            fbjwttoken: {
-                type: String,
-                select: false
-            },
-            username: { type: String }
+            email: String,
+            fbjwttoken: String,
+            username: String
         });
 
         return usersSchema;
@@ -30,7 +23,7 @@ export class UsersModel {
     }
 
     async getById(userId) {
-        return await this.user.find({ 'id': userId }, { fbjwttoken: 1 });
+        return await this.user.find({ 'id': userId }).select({ "username": 1, "_id": 0, "email": 1, "fbjwttoken": 1, "id": 1 });
     }
 
     async add(user) {
@@ -44,7 +37,7 @@ export class UsersModel {
     }
 
     async getByUserEmail(email) {
-        return await this.user.find({ 'email': email }, { fbjwttoken: 1 });
+        return await this.user.find({ 'email': email }).select({ "username": 1, "_id": 0, "email": 1, "fbjwttoken": 1 });
     }
 
 }

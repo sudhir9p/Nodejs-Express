@@ -7,9 +7,9 @@ export class AuthService {
 
     async authorizeUser(email) {
         const user = await this.userService.getUserByEmail(email);
-        console.log('jkdjfkjdxzkcjkxzc ' + user);
-        if (user && user.fbjwttoken) {
-            const activeUser = await this.tokenHandlerService.verifyToken(user.fbjwttoken);
+        const currentUser = user && user[0] && user[0].toObject();
+        if (currentUser && currentUser.fbjwttoken) {
+            const activeUser = await this.tokenHandlerService.verifyToken(currentUser.fbjwttoken);
             if (activeUser && activeUser.id) {
                 return true;
             }
