@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import { jwtkey, tokenExpiration } from '../../config/config.json';
-import { UsersModel } from '../models/user.model';
 
 
 export class JWTTokenService {

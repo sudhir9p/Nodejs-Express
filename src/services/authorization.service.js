@@ -19,4 +19,16 @@ export class AuthService {
         else
             throw new Error("User not registered , please visist /auth/facebook");
     }
+
+    async isAuthenticated(req, res, next) {
+        if (req.header("useremail")) {
+            const isAuthorized = await this.authorizeUser(req.header("useremail"));
+            if (isAuthorized)
+                next();
+            else
+                res.status(400).send("User token expired.Please login again /auth/facebook");
+        }
+        else
+            throw new Error("useremail header is required.");
+    }
 }

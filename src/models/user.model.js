@@ -18,8 +18,8 @@ export class UsersModel {
         return usersSchema;
     }
 
-    get() {
-
+    async get() {
+        return await this.user.find({});
     }
 
     async getById(userId) {

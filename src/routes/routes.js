@@ -7,7 +7,6 @@ import { AuthService } from '../services/authorization.service';
 
 export class NewsArticlesRoutes {
     constructor(router) {
-        //this.app = express.Router();
         this.app = router;
         this.articlesService = new NewsArticlesService();
         this.userService = new UsersService();
@@ -16,45 +15,38 @@ export class NewsArticlesRoutes {
     }
 
     getRoutes() {
-        //try {
         this.app.get('/', (req, res) => {
             res.send('Nodejs-Express HomeTask');
         });
 
+
         this.app.get('/news', async (req, res, next) => {
             try {
-                if (req.header("useremail")) {
-                    const isAuthorized = await this.authService.authorizeUser(req.header("useremail"));
-                    if (isAuthorized) {
-                        const result = await this.articlesService.getarticles();
-                        res.send(result);
-                    }
-                    else
-                        res.status(400).send("User token expired.Please login again /auth/facebook");
-                }
-                else
-                    throw new Error("username header is required.");
+                await this.authService.isAuthenticated(req, res, next);
+            } catch (ex) {
+                next(ex);
             }
-            catch (ex) {
+        }, async (req, res, next) => {
+            try {
+                const result = await this.articlesService.getarticles();
+                res.send(result);
+            } catch (ex) {
                 next(ex);
             }
         });
 
-        this.app.post('/news', async (req, res,next) => {
+
+        this.app.post('/news', async (req, res, next) => {
             try {
-                if (req.header("useremail")) {
-                    const isAuthorized = await this.authService.authorizeUser(req.header("useremail"));
-                    if (isAuthorized) {
-                        const result = await this.articlesService.addarticle(req.body);
-                        res.send(result);
-                    }
-                    else
-                        res.status(400).send("User token expired.Please login again /auth/facebook");
-                }
-                else
-                    throw new Error("useremail header is required.");
+                await this.authService.isAuthenticated(req, res, next);
+            } catch (ex) {
+                next(ex);
             }
-            catch (ex) {
+        }, async (req, res, next) => {
+            try {
+                const result = await this.articlesService.addarticle(req.body);
+                res.send(result);
+            } catch (ex) {
                 next(ex);
             }
         });
@@ -68,26 +60,23 @@ export class NewsArticlesRoutes {
             const result = await this.articlesService.updatearticle(req.params.articleId, req.body);
             res.send(result);
         });
-        this.app.delete('/news/:articleId', async (req, res,next) => {
+
+        this.app.delete('/news/:articleId', async (req, res, next) => {
             try {
-                if (req.header("useremail")) {
-                    const isAuthorized = await this.authService.authorizeUser(req.header("useremail"));
-                    if (isAuthorized) {
-                        const result = await this.articlesService.deletearticles(req.params.articleId);
-                        res.send(result);
-                    }
-                    else
-                        res.status(400).send("User token expired.Please login again /auth/facebook");
-                }
-                else
-                    throw new Error("useremail header is required.");
+                await this.authService.isAuthenticated(req, res, next);
+            } catch (ex) {
+                next(ex);
             }
-            catch (ex) {
+        }, async (req, res, next) => {
+            try {
+                const result = await this.articlesService.deletearticles(req.params.articleId);
+                res.send(result);
+            } catch (ex) {
                 next(ex);
             }
         });
 
-
+        
         this.app.get('/auth/facebook', passport.authenticate('facebook', {
             scope: ['public_profile', 'email']
         }));
