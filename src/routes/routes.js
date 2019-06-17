@@ -1,7 +1,6 @@
 import { NewsArticlesService } from '../services/articles.service';
 import { UsersService } from '../services/users.service';
 import passport from 'passport';
-import express from 'express';
 import { JWTTokenService } from '../services/tokenHandler.service';
 import { AuthService } from '../services/authorization.service';
 
@@ -76,39 +75,20 @@ export class NewsArticlesRoutes {
             }
         });
 
-        
+
         this.app.get('/auth/facebook', passport.authenticate('facebook', {
             scope: ['public_profile', 'email']
         }));
 
         this.app.get('/auth/facebook/callback',
             passport.authenticate('facebook', { scope: ['email', 'public_profile', 'user_location'] }),
-            async (req, res) => {
-                if (req.user && req.user.id) {
-                    const existingUser = await this.userService.checkUserExists(req.user.id);
-
-                    if (existingUser && existingUser.id) {
-                        this.tokenService.verifyToken(existingUser.fbjwttoken).then((activeUser) => {
-                            if (activeUser && activeUser.id) {
-                                // user is active
-                                res.send(req.user);
-                            }
-                        }, async (err) => {
-                            //update token
-                            const generatedtoken = this.tokenService.createToken(req.user);
-                            const updatedUser = await this.userService.updateUserToken(generatedtoken, req.user);
-                            res.send(updatedUser);
-                        });
-                    }
-                    else {
-                        //create token and add user in db
-                        const token = this.tokenService.createToken(req.user)
-                        const newUser = await this.userService.createUser(req.user, token);
-                        res.send(newUser);
-                    }
-
+            async (req, res, next) => {
+                try {
+                    await this.authService.authorizeFacebookUser(req, res);
                 }
-
+                catch (e) {
+                    next(e);
+                }
             }
         );
     }
