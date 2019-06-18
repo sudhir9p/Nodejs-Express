@@ -72,12 +72,4 @@ export class NewsArticlesRoutes {
         });
     }
 
-    async isAuthenticated(){
-        try {
-            await this.authService.isAuthenticated(req, res, next);
-        } catch (ex) {
-            next(ex);
-        }
-    }
-
 }
