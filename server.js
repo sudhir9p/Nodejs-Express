@@ -1,5 +1,8 @@
-import { NewsArticlesRoutes } from './src/routes/routes';
+import { NewsArticlesRoutes } from './src/routes/articles';
+import { AuthRoutes } from './src/routes/auth';
 import { PassportService } from './src/services/passport.service';
+import { UsersService } from './src/services/users.service';
+import { mongoServer, mongoDb } from './config/config.json';
 
 const express = require('express'),
     bodyParser = require('body-parser'),
@@ -19,12 +22,14 @@ const passportservice = new PassportService(passport);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+const userService = new UsersService();
 
+const articleRoutes = new NewsArticlesRoutes(userService);
+const authRoutes = new AuthRoutes(userService);
 
-const routes = new NewsArticlesRoutes(router);
-routes.getRoutes();
 app.use(morgan('common', { stream: logfile }));
-app.use('/', router);
+app.use('/news', articleRoutes.articlesRouter);
+app.use('/auth', authRoutes.authRouter);
 
 
 //error handler
@@ -35,9 +40,11 @@ app.use((err, req, res, next) => {
 
 
 //Mongo Connection 
-mongoose.connect('mongodb://localhost:27017/articledb', { useNewUrlParser: true })
+mongoose.connect(`mongodb://${mongoServer}/${mongoDb}`, { useNewUrlParser: true })
 const db = mongoose.connection
-db.on('error', console.error.bind(console, 'connection error:'))
+db.on('error', (ex)=>{
+    console.log(`Mongo connection error ${ex}`);
+})
 db.once('open', function () {
     console.log('Connected to MongoDB')
 

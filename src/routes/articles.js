@@ -1,25 +1,21 @@
 import { NewsArticlesService } from '../services/articles.service';
-import { UsersService } from '../services/users.service';
-import passport from 'passport';
 import { JWTTokenService } from '../services/tokenHandler.service';
 import { AuthService } from '../services/authorization.service';
+import express from 'express';
 
 export class NewsArticlesRoutes {
-    constructor(router) {
-        this.app = router;
+    constructor(userService) {
+        this.articlesRouter = express.Router();
+        this.userService = userService;
         this.articlesService = new NewsArticlesService();
-        this.userService = new UsersService();
         this.tokenService = new JWTTokenService();
         this.authService = new AuthService(this.tokenService, this.userService);
+        this.getRoutes();
     }
 
     getRoutes() {
-        this.app.get('/', (req, res) => {
-            res.send('Nodejs-Express HomeTask');
-        });
 
-
-        this.app.get('/news', async (req, res, next) => {
+        this.articlesRouter.get('/', async (req, res, next) => {
             try {
                 await this.authService.isAuthenticated(req, res, next);
             } catch (ex) {
@@ -35,7 +31,7 @@ export class NewsArticlesRoutes {
         });
 
 
-        this.app.post('/news', async (req, res, next) => {
+        this.articlesRouter.post('/', async (req, res, next) => {
             try {
                 await this.authService.isAuthenticated(req, res, next);
             } catch (ex) {
@@ -50,17 +46,17 @@ export class NewsArticlesRoutes {
             }
         });
 
-        this.app.get('/news/:articleId', async (req, res) => {
+        this.articlesRouter.get('/:articleId', async (req, res) => {
             const result = await this.articlesService.getarticlesById(req.params.articleId);
             res.send(result);
         });
 
-        this.app.put('/news/:articleId', async (req, res) => {
+        this.articlesRouter.put('/:articleId', async (req, res) => {
             const result = await this.articlesService.updatearticle(req.params.articleId, req.body);
             res.send(result);
         });
 
-        this.app.delete('/news/:articleId', async (req, res, next) => {
+        this.articlesRouter.delete('/:articleId', async (req, res, next) => {
             try {
                 await this.authService.isAuthenticated(req, res, next);
             } catch (ex) {
@@ -74,23 +70,14 @@ export class NewsArticlesRoutes {
                 next(ex);
             }
         });
+    }
 
-
-        this.app.get('/auth/facebook', passport.authenticate('facebook', {
-            scope: ['public_profile', 'email']
-        }));
-
-        this.app.get('/auth/facebook/callback',
-            passport.authenticate('facebook', { scope: ['email', 'public_profile', 'user_location'] }),
-            async (req, res, next) => {
-                try {
-                    await this.authService.authorizeFacebookUser(req, res);
-                }
-                catch (e) {
-                    next(e);
-                }
-            }
-        );
+    async isAuthenticated(){
+        try {
+            await this.authService.isAuthenticated(req, res, next);
+        } catch (ex) {
+            next(ex);
+        }
     }
 
 }

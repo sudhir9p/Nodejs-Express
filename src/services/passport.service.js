@@ -1,18 +1,16 @@
-import { UsersModel } from '../models/user.model';
-
 import { clientID, clientSecret, callbackUrl } from '../../config/config.json';
 import FacebookStrategy from 'passport-facebook';
 
 export class PassportService {
     constructor(passport) {
-        passport.serializeUser((user, done) => {
-            done(null, user);
-        });
+        this.passport = passport;
+        this.initialize();
+    }
 
-        passport.deserializeUser((obj, done) => {
-            done(null, obj)
-        });
-        passport.use(new FacebookStrategy.Strategy({
+    initialize() {
+        this.serializeUser();
+        this.deserializeUser();
+        this.passport.use(new FacebookStrategy.Strategy({
             clientID: clientID,
             clientSecret: clientSecret,
             callbackURL: callbackUrl,
@@ -21,6 +19,18 @@ export class PassportService {
             (accessToken, refreshToken, profile, done) => {
                 return done(null, profile);
             }));
+    }
+
+    serializeUser() {
+        this.passport.serializeUser((user, done) => {
+            done(null, user);
+        });
+    }
+
+    deserializeUser() {
+        this.passport.deserializeUser((obj, done) => {
+            done(null, obj)
+        });
     }
 
 }

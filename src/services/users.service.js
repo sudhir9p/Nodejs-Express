@@ -22,7 +22,7 @@ export class UsersService {
     }
 
     async createUser(user, token) {
-        const currentUser = { "id": user.id, "email": user.emails[0].value, "fbjwttoken": token, "username": user.displayName, };
+        const currentUser = { id: user.id, email: user.emails[0].value, fbjwttoken: token, username: user.displayName, };
         const result = await this.userModel.add(currentUser);
         return result;
     }
