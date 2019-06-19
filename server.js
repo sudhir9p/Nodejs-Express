@@ -39,18 +39,18 @@ app.use((err, req, res, next) => {
 });
 
 
+app.listen(port, () => {
+    console.log('API Server Listening on port ' + port + '!')
+});
+
 //Mongo Connection 
 mongoose.connect(`mongodb://${mongoServer}/${mongoDb}`, { useNewUrlParser: true })
 const db = mongoose.connection
-db.on('error', (ex)=>{
+db.on('error', (ex) => {
     console.log(`Mongo connection error ${ex}`);
 })
-db.once('open', function () {
-    console.log('Connected to MongoDB')
-
-    app.listen(port, function () {
-        console.log('API Server Listening on port ' + port + '!')
-    });
+db.once('open', () => {
+    console.log('Connected to MongoDB');
 })
 
 

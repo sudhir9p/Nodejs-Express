@@ -33,29 +33,33 @@ export class AuthService {
     }
 
     async authorizeFacebookUser(req, res) {
-        if (req.user && req.user.id) {
-            const existingUser = await this.userService.checkUserExists(req.user.id);
+        try {
+            if (req.user && req.user.id) {
+                const existingUser = await this.userService.checkUserExists(req.user.id);
 
-            if (existingUser && existingUser.id) {
-                this.tokenHandlerService.verifyToken(existingUser.fbjwttoken).then((activeUser) => {
-                    if (activeUser && activeUser.id) {
-                        // user is active
-                        res.send(req.user);
-                    }
-                }, async (err) => {
-                    //update token
-                    const generatedtoken = this.tokenHandlerService.createToken(req.user);
-                    const updatedUser = await this.userService.updateUserToken(generatedtoken, req.user);
-                    res.send(updatedUser);
-                });
-            }
-            else {
-                //create token and add user in db
-                const token = this.tokenHandlerService.createToken(req.user)
-                const newUser = await this.userService.createUser(req.user, token);
-                res.send(newUser);
-            }
+                if (existingUser && existingUser.id) {
+                    this.tokenHandlerService.verifyToken(existingUser.fbjwttoken).then((activeUser) => {
+                        if (activeUser && activeUser.id) {
+                            // user is active
+                            res.send(req.user);
+                        }
+                    }, async (err) => {
+                        //update token
+                        const generatedtoken = this.tokenHandlerService.createToken(req.user);
+                        const updatedUser = await this.userService.updateUserToken(generatedtoken, req.user);
+                        res.send(updatedUser);
+                    });
+                }
+                else {
+                    //create token and add user in db
+                    const token = this.tokenHandlerService.createToken(req.user)
+                    const newUser = await this.userService.createUser(req.user, token);
+                    res.send(newUser);
+                }
 
+            }
+        } catch (error) {
+            throw error;
         }
     }
 }
